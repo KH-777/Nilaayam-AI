@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nilaayam AI Legal Analysis Report</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-size: 9pt;
+                color: #64748b;
+            }
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            line-height: 1.5;
+            font-size: 10pt;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            border-bottom: 2px solid #0284c7;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .brand {
+            font-size: 20pt;
+            font-weight: 800;
+            color: #0369a1;
+            letter-spacing: -0.5px;
+        }
+        .brand-sub {
+            font-size: 9pt;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        .meta-box {
+            text-align: right;
+            font-size: 8.5pt;
+            color: #475569;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 8.5pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-red { background-color: #fee2e2; color: #b91c1c; border: 1px solid #f87171; }
+        .badge-yellow { background-color: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
+        .badge-green { background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+        .badge-grey { background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+        .badge-critical { background-color: #7f1d1d; color: #ffffff; }
+
+        .card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 16px;
+            background-color: #ffffff;
+            page-break-inside: avoid;
+        }
+        .card-red { border-left: 5px solid #ef4444; background-color: #fffaf0; }
+        .card-yellow { border-left: 5px solid #f59e0b; }
+        .card-green { border-left: 5px solid #10b981; }
+        .card-grey { border-left: 5px solid #94a3b8; background-color: #f8fafc; }
+
+        h2 {
+            font-size: 13pt;
+            color: #0f172a;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 6px;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+        h3 {
+            font-size: 11pt;
+            color: #1e293b;
+            margin-top: 0;
+            margin-bottom: 6px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .metric-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+        .metric-val {
+            font-size: 16pt;
+            font-weight: 700;
+        }
+        .metric-lbl {
+            font-size: 8pt;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 9pt;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .clause-quote {
+            background-color: #f8fafc;
+            border-left: 3px solid #cbd5e1;
+            padding: 8px 12px;
+            font-style: italic;
+            font-size: 9pt;
+            color: #334155;
+            margin: 8px 0;
+        }
+        .question-box {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #1e40af;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+        .ref-box {
+            font-size: 8.5pt;
+            color: #475569;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px dashed #e2e8f0;
+        }
+        .disclaimer-box {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 8pt;
+            color: #991b1b;
+            margin-top: 24px;
+            page-break-inside: avoid;
+        }
+        .ai-notice-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 7.5pt;
+            color: #64748b;
+            margin-top: 10px;
+            page-break-inside: avoid;
+        }
+        ol, ul {
+            padding-left: 20px;
+            margin: 6px 0;
+        }
+        li {
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <div class="brand">NILAAYAM AI</div>
+            <div class="brand-sub">Tamil Nadu Legal & Property Intelligence Platform</div>
+        </div>
+        <div class="meta-box">
+            <div><strong>Report ID:</strong> {{ report_id }}</div>
+            <div><strong>Generated:</strong> {{ generated_at }}</div>
+            <div style="margin-top: 4px;">
+                <span class="badge {% if 'CRITICAL' in summary.overall_status or 'DEFECT' in summary.overall_status %}badge-red{% elif 'CAUTION' in summary.overall_status %}badge-yellow{% else %}badge-green{% endif %}">
+                    {{ summary.overall_status }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Executive Summary -->
+    <div class="card" style="background-color: #f0fdf4; border-color: #bbf7d0;">
+        <h3 style="color: #166534;">Executive Summary</h3>
+        <p style="margin: 0; color: #14532d;">{{ summary.executive_summary }}</p>
+    </div>
+
+    {% if report_type == "agreement_analysis" %}
+        <!-- Metric Counters -->
+        <div class="summary-grid">
+            <div class="metric-card">
+                <div class="metric-val" style="color: #dc2626;">{{ summary.red_count }}</div>
+                <div class="metric-lbl">High Risk (Red)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-val" style="color: #d97706;">{{ summary.yellow_count }}</div>
+                <div class="metric-lbl">Caution (Yellow)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-val" style="color: #16a34a;">{{ summary.green_count }}</div>
+                <div class="metric-lbl">Balanced (Green)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-val" style="color: #64748b;">{{ summary.grey_count }}</div>
+                <div class="metric-lbl">Missing (Grey)</div>
+            </div>
+        </div>
+
+        <!-- High Priority Red Findings -->
+        {% if high_priority_findings %}
+            <h2>High Priority Action Items (RED)</h2>
+            {% for item in high_priority_findings %}
+                <div class="card card-red">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="color: #b91c1c; text-transform: uppercase;">{{ item.clause_category | replace('_', ' ') }}</h3>
+                        <span class="badge badge-red">High Risk</span>
+                    </div>
+                    <div class="clause-quote">"{{ item.clause_text }}"</div>
+                    <p><strong>Assessment:</strong> {{ item.explanation }}</p>
+                    {% if item.explanation_ta %}
+                        <p style="color: #475569; font-size: 8.5pt;"><em>தமிழ் விளக்கம்: {{ item.explanation_ta }}</em></p>
+                    {% endif %}
+                    {% if item.suggested_question %}
+                        <div class="question-box">
+                            <strong>Suggested Negotiation Question:</strong> {{ item.suggested_question }}
+                        </div>
+                    {% endif %}
+                    {% if item.legal_references %}
+                        <div class="ref-box">
+                            <strong>Statutory Basis:</strong>
+                            {% for ref in item.legal_references %}
+                                {{ ref.title }} ({{ ref.section }}).
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Missing Mandatory Clauses -->
+        {% if missing_clauses %}
+            <h2>Missing Required Clauses</h2>
+            {% for item in missing_clauses %}
+                <div class="card card-grey">
+                    <h3 style="color: #475569;">Missing: {{ item.clause_category | replace('_', ' ') | title }}</h3>
+                    <p>{{ item.explanation }}</p>
+                    <div class="question-box">
+                        <strong>Drafting Action:</strong> {{ item.suggested_question }}
+                    </div>
+                    {% if item.reference_comparison %}
+                        <div class="ref-box">{{ item.reference_comparison }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Tailored Negotiation Questions -->
+        {% if questions %}
+            <h2>Top Recommended Questions for Landlord / Drafter</h2>
+            <div class="card">
+                <ol>
+                    {% for q in questions %}
+                        <li style="margin-bottom: 8px;"><strong>{{ q }}</strong></li>
+                    {% endfor %}
+                </ol>
+            </div>
+        {% endif %}
+
+        <!-- Statutory References Cited -->
+        {% if legal_references %}
+            <h2>Statutory Legal References Cited</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Act / Regulation</th>
+                        <th style="width: 15%;">Section</th>
+                        <th style="width: 60%;">Statutory Mandate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ref in legal_references %}
+                        <tr>
+                            <td><strong>{{ ref.title }}</strong><br><small style="color: #64748b;">{{ ref.authority }}</small></td>
+                            <td>{{ ref.section or "N/A" }}</td>
+                            <td>{{ ref.excerpt }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+    {% elif report_type == "property_verification" %}
+        <!-- Property Document Verification Content -->
+        {% if red_flags %}
+            <h2>Title Red Flags Detected</h2>
+            {% for flag in red_flags %}
+                <div class="card card-red">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="color: #b91c1c;">FLAG: {{ flag.field_name or "General Title Risk" }}</h3>
+                        <span class="badge badge-critical">{{ flag.severity }}</span>
+                    </div>
+                    <p><strong>Description:</strong> {{ flag.description }}</p>
+                    <div class="question-box" style="background-color: #fef2f2; border-color: #fca5a5; color: #991b1b;">
+                        <strong>Recommendation:</strong> {{ flag.recommendation }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <h2>Cross-Document Field Concordance Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 18%;">Field</th>
+                    <th style="width: 22%;">Patta</th>
+                    <th style="width: 22%;">Encumbrance Cert (EC)</th>
+                    <th style="width: 22%;">Sale Deed</th>
+                    <th style="width: 16%;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in field_comparison_table %}
+                    <tr>
+                        <td><strong>{{ f.field_name | replace('_', ' ') | title }}</strong></td>
+                        <td>{{ f.patta_value or "—" }}</td>
+                        <td>{{ f.ec_value or "—" }}</td>
+                        <td>{{ f.sale_deed_value or "—" }}</td>
+                        <td>
+                            <span class="badge {% if f.status == 'match' %}badge-green{% elif f.status == 'mismatch' %}badge-red{% elif f.status == 'likely_ocr_error' %}badge-yellow{% else %}badge-grey{% endif %}">
+                                {{ f.status | replace('_', ' ') }}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if recommendations %}
+            <h2>Advocate Verification Checklist</h2>
+            <div class="card">
+                <ul>
+                    {% for rec in recommendations %}
+                        <li>{{ rec }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <!-- Disclaimers & Regulatory Notices -->
+    <div class="disclaimer-box">
+        <strong>LEGAL DISCLAIMER:</strong> {{ disclaimer }}
+    </div>
+
+    <div class="ai-notice-box">
+        {{ ai_notice }}
+    </div>
+
+</body>
+</html>
